@@ -19,52 +19,69 @@ var winCount = 0;
 var lossCount = 0;
 var guessCount = 0;
 var guessCountMax = 10;
-var userGuess = "";
+
 var userGuessList = [];
 var choiceOptions = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
 var chosenOption = choiceOptions[Math.round(Math.random() * (choiceOptions.length -1))];
+var userGuess = "";
 //var illegalOptions = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "=", "[", "]", "\"", ";", "'", ",", ".", "/", "`", "<", ">",
 // "?", "~", "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "_", "+", ":", "|", "{", "}", '"' ];
 
+
+
 //document.addEventListener("DOMContentLoaded", function(event) {
 
+
+
+
 	for (var i = 0; i < guessCountMax; i++) {
-	
-		//Get key input and convert to a lowercase letter
-		document.onkeyup = function(event){
-			letter =String.fromCharCode(event.keyCode).toLowerCase();
-			console.log('this is letter: ' + letter);
-			userGuess = letter;
-		}
+
+	//Get key input and convert to a lowercase letter
+	document.getElementById('game').append("Type a letter + i");
+	document.onkeyup = function(event){
+	letter =String.fromCharCode(event.keyCode).toLowerCase();
+	console.log("this is letter: " + letter);
+	userGuess = letter;
+	}
 	console.log("userGuess is:" + userGuess);
 
 	userGuessList.push(userGuess);
 	console.log(userGuessList);
+		
+	
 
 
 		//Win Condition
 		if (userGuess === chosenOption) {
-			winCount++;
-			document.getElementById('win').append = winCount;
-			alert("You guessed the correct letter!");
-			reset();
+			winner();
 		}
 
 		//Loss Condition
 		else if (guessCount === guessCountMax){
-			lossCount++;
-			document.getElementById('lose').append = lossCount;
-			alert("You guessed too many wrong letters.");
-			reset();
+			loss();
 		}
 
-		else if (userGuess !== chosenOption){
+		else {
 			guessCount++;
 			console.log(guessCount);
-			document.getElementById('guessesleft').innerHTML = (guessCountMax - guessCount);
-		}
-	}
+			document.getElementById("guessesleft").innerHTML = (guessCountMax - guessCount);
+		}}
 //});
+
+
+function winner() {
+	winCount++;
+	document.getElementById("win").innerHTML = ("Wins: " + winCount);
+	alert("You guessed the correct letter! :D");
+	reset();
+}
+
+function loss(){
+	lossCount++;
+	document.getElementById("lose").innerHTML = ("Losses: " + lossCount);
+	alert("You guessed too many wrong letters. :'(");
+	reset();
+}
 
 //Reset game but keep win lose counter
 
@@ -73,5 +90,4 @@ function reset() {
 	chosenOption = choiceOptions[Math.round(Math.random() * (choiceOptions.length -1))];
 	userGuessList = [];
 	userGuess = "";
-
 }
