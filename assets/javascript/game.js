@@ -29,7 +29,7 @@ var updateLetterToGuess = function() {
 
 var updateGuessesSoFar = function() {
     // Here we take the guesses the user has tried -- then display it as letters separated by commas.
-    document.querySelector("#guessed-letters").innerHTML = guessedLetters.join(", ");
+    document.querySelector("#guesslist").innerHTML = guessedLetters.join(", ");
 };
 
 // Function will be called when we reset everything
