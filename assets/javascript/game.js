@@ -1,93 +1,87 @@
-/*
-Create an list of characters to guess -done
-Create a Guess max count -done
-Need to randomly choose a character -done
-Create a place to store user character -done
-Request a character from the user
-Display players guessed characters
-If not correct character decrease guessCountMax by 1
-If guess correct character win.
-If guessCount = guessCountMax lose. -done
-If win increase win counter by 1 and display win to player
-If lose increase loss counter by 1 and display loss to player
-After win or lose reset game
-Reset the guessCountMax, the userGuessList, the userGuess, and randomly pick a new character
-*/
+// We're creating a list of three options for the letters
+var letters = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
 
-//Game Variables
-var winCount = 0;
-var lossCount = 0;
-var guessCount = 0;
-var guessCountMax = 10;
+// This array will hold what we guess
+var guessedLetters = [];
 
-var userGuessList = [];
-var choiceOptions = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
-var chosenOption = choiceOptions[Math.round(Math.random() * (choiceOptions.length -1))];
-var userGuess = "";
-//var illegalOptions = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "=", "[", "]", "\"", ";", "'", ",", ".", "/", "`", "<", ">",
-// "?", "~", "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "_", "+", ":", "|", "{", "}", '"' ];
+// This variable will be randomly assigned one of the three letters
+var letterToGuess = null;
 
+// These are what we'll use to count down
+var totalGuesses = 9;
+var guessesLeft = 9;
 
+// This is the counter for wins/losses
+var wins = 0;
+var losses = 0;
 
-//document.addEventListener("DOMContentLoaded", function(event) {
+// Below we created three functions to updateGuesses, updateGuessesLeft, and updateGuessesSoFar
+var updateGuessesLeft = function() {
+    // Here we are grabbing the HTML element and setting it equal to the guessesLeft.
+    // (i.e. guessesLeft will get displayed in HTML)
+    document.querySelector("#guessesleft").innerHTML = ("Guesses left: " + guessesLeft);
+};
 
+var updateLetterToGuess = function() {
+    // Here we get a random letterToGuess and assign it based on a random generator (only looking at a, b, or c)
+    this.letterToGuess = this.letters[Math.floor(Math.random() * this.letters.length)];
+};
 
+var updateGuessesSoFar = function() {
+    // Here we take the guesses the user has tried -- then display it as letters separated by commas.
+    document.querySelector("#guessed-letters").innerHTML = guessedLetters.join(", ");
+};
 
+// Function will be called when we reset everything
+var reset = function() {
+    totalGuesses = 9;
+    guessesLeft = 9;
+    guessedLetters = [];
+    updateLetterToGuess();
+    updateGuessesLeft();
+    updateGuessesSoFar();
+};
 
-	for (var i = 0; i < guessCountMax; i++) {
+// Execute on page load.
+updateLetterToGuess();
+updateGuessesLeft();
 
-	//Get key input and convert to a lowercase letter
-	document.getElementById('game').append("Type a letter + i");
-	document.onkeyup = function(event){
-	letter =String.fromCharCode(event.keyCode).toLowerCase();
-	console.log("this is letter: " + letter);
-	userGuess = letter;
-	}
-	console.log("userGuess is:" + userGuess);
+// This function will capture the keyboard clicks.
+document.onkeyup = function(event) {
+    // It's going to reduce the guesses by one
+    guessesLeft--;
 
-	userGuessList.push(userGuess);
-	console.log(userGuessList);
-		
-	
+    // Lowercase the letter
+    var letter = String.fromCharCode(event.keyCode).toLowerCase();
 
+    // Then add the guess to the guessedLetters array
+    guessedLetters.push(letter);
 
-		//Win Condition
-		if (userGuess === chosenOption) {
-			winner();
-		}
-
-		//Loss Condition
-		else if (guessCount === guessCountMax){
-			loss();
-		}
-
-		else {
-			guessCount++;
-			console.log(guessCount);
-			document.getElementById("guessesleft").innerHTML = (guessCountMax - guessCount);
-		}}
-//});
+    // Then its going to run the update functions
+    updateGuessesLeft();
+    updateGuessesSoFar();
 
 
-function winner() {
-	winCount++;
-	document.getElementById("win").innerHTML = ("Wins: " + winCount);
-	alert("You guessed the correct letter! :D");
-	reset();
-}
+    // We'll check if there's a match.
+    if (letter === letterToGuess) {
 
-function loss(){
-	lossCount++;
-	document.getElementById("lose").innerHTML = ("Losses: " + lossCount);
-	alert("You guessed too many wrong letters. :'(");
-	reset();
-}
+        // If there is then we win and we'll update the HTML to display the win.
+        wins++;
+        document.querySelector("#win").innerHTML = ("Wins: " + wins);
 
-//Reset game but keep win lose counter
+        // Then we'll reset the game
+        reset();
+    }
 
-function reset() {
-	guessCount = 0;
-	chosenOption = choiceOptions[Math.round(Math.random() * (choiceOptions.length -1))];
-	userGuessList = [];
-	userGuess = "";
-}
+
+    // If we are out of guesses...
+    if (guessesLeft === 0) {
+
+        // Then we will loss and we'll update the HTML to display the loss.
+        losses++;
+        document.querySelector("#lose").innerHTML = ("Losses: " + losses);
+
+        // Then we'll call the reset.
+        reset();
+    }
+};
